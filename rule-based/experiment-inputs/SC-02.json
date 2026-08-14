@@ -1,0 +1,23 @@
+{
+  "case_id": "SC-02",
+  "timestamp_first": "2026-08-11T16:47:39.000+0000",
+  "timestamp_last": "2026-08-11T16:47:56.000+0000",
+  "alert_count": 9,
+  "failed_login_count": 8,
+  "successful_login_count": 1,
+  "agent_name": "WIN11-ENDPOINT-01",
+  "agent_ip": "192.168.202.129",
+  "rule_id": "60122",
+  "rule_level": 5,
+  "rule_description": "Logon Failure - Unknown user or bad password",
+  "event_id": 4625,
+  "target_user": "SOC_SC02_Test",
+  "logon_type": 3,
+  "authentication_package": "Negotiate",
+  "status": "0xc000006d",
+  "sub_status": "0xc000006a",
+  "success_rule_id": "60106",
+  "success_rule_level": 3,
+  "success_event_id": 4624,
+  "success_description": "Windows Logon Success"
+}
