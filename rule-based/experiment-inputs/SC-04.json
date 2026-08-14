@@ -1,0 +1,13 @@
+{
+  "case_id": "SC-04",
+  "alert_count": 4,
+  "agent_name": "WIN11-ENDPOINT-01",
+  "agent_ip": "192.168.202.129",
+  "rule_id": "92031",
+  "rule_level": 3,
+  "rule_description": "Discovery activity executed",
+  "event_id": 1,
+  "command_line": "whoami && hostname && whoami /groups && ipconfig /all && arp -a && route print && net user && net localgroup administrators && netstat -ano",
+  "user": "Lawrence\\arkar",
+  "integrity_level": "Medium"
+}
