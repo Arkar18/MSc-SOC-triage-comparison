@@ -1,0 +1,17 @@
+{
+  "case_id": "SC-03",
+  "alert_count": 1,
+  "agent_name": "WIN11-ENDPOINT-01",
+  "agent_ip": "192.168.202.129",
+  "rule_id": "92021",
+  "rule_level": 3,
+  "rule_description": "Powershell was used to delete files or directories",
+  "event_id": 1,
+  "command_line": "powershell.exe -NoProfile -Command \"Get-ComputerInfo | Select-Object WindowsProductName,WindowsVersion,OsBuildNumber,CsName; Get-CimInstance Win32_ComputerSystem | Select-Object Manufacturer,Model,TotalPhysicalMemory; Get-CimInstance Win32_OperatingSystem | Select-Object Caption,Version,BuildNumber,OSArchitecture; Get-CimInstance Win32_Processor | Select-Object Name,NumberOfCores,NumberOfLogicalProcessors; Get-Volume | Select-Object DriveLetter,FileSystem,Size,SizeRemaining; Get-Service | Where-Object {$_.Status -eq 'Running'} | Select-Object -First 10 Name,Status\"",
+  "user": "Lawrence\\arkar",
+  "integrity_level": "Medium",
+  "process_id": 13672,
+  "parent_image": "cmd.exe",
+  "parent_process_id": 12532,
+  "parent_user": "Lawrence\\arkar"
+}
