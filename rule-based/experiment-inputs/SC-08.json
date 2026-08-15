@@ -1,0 +1,32 @@
+{
+  "case_id": "SC-08",
+  "alert_count": 1,
+  "event_timestamp": "2026-08-15T07:08:58.633Z",
+  "wazuh_timestamp": "2026-08-15T07:10:27.971+0000",
+  "agent_name": "WIN11-ENDPOINT-01",
+  "agent_ip": "192.168.202.129",
+  "rule_id": "92041",
+  "rule_level": 10,
+  "rule_description": "Value added to registry key has Base64-like pattern",
+  "event_id": 1,
+  "image": "C:\\Windows\\System32\\reg.exe",
+  "command_line": "\"C:\\WINDOWS\\system32\\reg.exe\" add HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v UpdateCheck_SC08 /t REG_SZ /d \"cmd.exe /c echo SC08_registry_test\" /f",
+  "process_id": 9888,
+  "parent_image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+  "parent_process_id": 5956,
+  "user": "Lawrence\\arkar",
+  "parent_user": "Lawrence\\arkar",
+  "integrity_level": "Medium",
+  "registry_key": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+  "registry_value_name": "UpdateCheck_SC08",
+  "registry_value_data": "cmd.exe /c echo SC08_registry_test",
+  "mitre_ids": [
+    "T1027",
+    "T1112"
+  ],
+  "mitre_techniques": [
+    "Obfuscated Files or Information",
+    "Modify Registry"
+  ],
+  "mitre_tactic": "Defense Evasion"
+}
