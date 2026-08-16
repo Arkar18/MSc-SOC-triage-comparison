@@ -1,0 +1,39 @@
+{
+  "case_id": "SC-10",
+  "alert_count": 3,
+  "event_timestamp": "2026-08-16T18:38:47.4359780Z",
+  "wazuh_timestamp": "2026-08-16T18:40:15.778+0000",
+  "agent_name": "WIN11-ENDPOINT-01",
+  "agent_ip": "192.168.202.129",
+
+  "rule_id": "60154",
+  "rule_level": 12,
+  "rule_description": "Administrators Group Changed",
+  "event_id": 4732,
+
+  "target_group": "Administrators",
+  "target_group_sid": "S-1-5-32-544",
+  "member_sid": "S-1-5-21-3746427038-1759470097-2907315098-1010",
+  "subject_user": "arkar",
+  "subject_domain": "LAWRENCE",
+
+  "account_creation_event_id": 4720,
+  "account_creation_timestamp": "2026-08-16T18:38:28.3725002Z",
+  "account_creation_wazuh_timestamp": "2026-08-16T18:39:56.714+0000",
+  "account_creation_rule_id": "60109",
+  "account_creation_rule_level": 8,
+  "account_creation_rule_description": "User account enabled or created",
+  "created_account": "SOC_SC10_Test",
+  "created_account_sid": "S-1-5-21-3746427038-1759470097-2907315098-1010",
+
+  "mitre_id": "T1484",
+  "mitre_technique": "Domain Policy Modification",
+  "mitre_tactics": [
+    "Defense Evasion",
+    "Privilege Escalation"
+  ],
+
+  "account_creation_mitre_id": "T1098",
+  "account_creation_mitre_technique": "Account Manipulation",
+  "account_creation_mitre_tactic": "Persistence"
+}
