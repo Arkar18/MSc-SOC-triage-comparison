@@ -1,6 +1,9 @@
 {
   "type": "object",
   "properties": {
+    "summary": {
+      "type": "string"
+    },
     "decision": {
       "type": "string",
       "enum": [
@@ -31,6 +34,18 @@
       "minimum": 0,
       "maximum": 100
     },
+    "mitre_id": {
+      "type": "string"
+    },
+    "mitre_technique": {
+      "type": "string"
+    },
+    "mitre_tactic": {
+      "type": "string"
+    },
+    "mitre_basis": {
+      "type": "string"
+    },
     "reasoning": {
       "type": "string"
     },
@@ -42,10 +57,15 @@
     }
   },
   "required": [
+    "summary",
     "decision",
     "severity",
     "escalation",
     "confidence",
+    "mitre_id",
+    "mitre_technique",
+    "mitre_tactic",
+    "mitre_basis",
     "reasoning",
     "evidence_used"
   ],
