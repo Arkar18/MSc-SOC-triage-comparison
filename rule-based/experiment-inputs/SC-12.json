@@ -1,0 +1,32 @@
+{
+  "case_id": "SC-12",
+  "alert_count": 2,
+  "event_timestamp": "2026-08-17T11:22:08.000Z",
+  "wazuh_timestamp": "2026-08-17T11:23:35.132+0000",
+  "agent_name": "WIN11-ENDPOINT-01",
+  "agent_ip": "192.168.202.129",
+  "rule_id": "550",
+  "rule_level": 7,
+  "rule_description": "Integrity checksum changed.",
+  "file_path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\SC12_FIM_Test.txt",
+  "file_action": "modified",
+  "monitoring_mode": "realtime",
+  "changed_attributes": [
+    "mtime",
+    "md5",
+    "sha1",
+    "sha256"
+  ],
+  "old_md5": "b2ce2d1f9930580c64cc2450fa1d25fa",
+  "new_md5": "30e2b724326b29ea309942a0b6d98ba5",
+  "old_sha1": "c50b61561ec0f91f08d5390698cbdf4047e66ccf",
+  "new_sha1": "c87605a54f65a6f9fffd4d308664093640bab94a",
+  "old_sha256": "443f07a8fe31c0af5149a7ef49f2c19539c96c7af9e1358bf5fee4a9e34ec176",
+  "new_sha256": "dca4a50517501d80584686ac2af78ae1bfa1f096e524a156bb21aefc8add113b",
+  "supporting_rule_id": "554",
+  "supporting_rule_level": 5,
+  "supporting_rule_description": "File added to the system.",
+  "mitre_id": "T1565.001",
+  "mitre_technique": "Stored Data Manipulation",
+  "mitre_tactic": "Impact"
+}
