@@ -1,0 +1,23 @@
+{
+  "case_id": "SC-09",
+  "alert_count": 1,
+  "event_timestamp": "2026-08-15T07:45:51.5866036Z",
+  "wazuh_timestamp": "2026-08-15T07:47:21.152+0000",
+  "agent_name": "WIN11-ENDPOINT-01",
+  "agent_ip": "192.168.202.129",
+  "rule_id": "61138",
+  "rule_level": 5,
+  "rule_description": "New Windows Service Created",
+  "event_id": 7045,
+  "service_name": "UpdateService_SC09",
+  "service_path": "C:\\Windows\\System32\\cmd.exe /c echo SC09_service_test",
+  "service_type": "user mode service",
+  "service_start_type": "demand start",
+  "service_account": "LocalSystem",
+  "mitre_id": "T1543.003",
+  "mitre_technique": "Windows Service",
+  "mitre_tactics": [
+    "Persistence",
+    "Privilege Escalation"
+  ]
+}
