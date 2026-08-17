@@ -1,84 +1,21 @@
-# LLM-Assisted SOC Triage
+## Pre-Experiment Schema Finalisation
 
-This directory contains the frozen configuration used for the LLM-assisted triage method in the MSc dissertation experiment.
+Before any official Gemini scenario testing was performed, the LLM-assisted configuration was reviewed against the final dissertation proposal.
 
-## Configuration
+The structured output schema was updated to include:
 
-- Method: LLM-Assisted SOC Triage
-- Version: `LLM-GEMINI-v1.0`
-- Model: `gemini-3.5-flash`
-- API method: `generateContent`
-- API version: `v1beta`
-- Thinking level: `medium`
-- Response format: Structured JSON
-- Orchestration platform: n8n
+- Alert summary
+- MITRE ATT&CK technique ID
+- MITRE ATT&CK technique name
+- MITRE ATT&CK tactic
+- MITRE mapping basis
 
-## Experimental Design
+The prompt was also updated to require MITRE ATT&CK mappings to be supported by the supplied Wazuh evidence and to avoid forcing a mapping when the evidence is insufficient.
 
-The LLM-assisted method receives the same frozen Wazuh evidence supplied to the deterministic rule-based method.
+This revision was completed before the first official Gemini run to maintain methodological transparency and prevent post-result prompt or schema tuning.
 
-Evidence is manually transferred into n8n as structured JSON to ensure that each triage method evaluates the same evidence.
+Following this revision, the Gemini model, prompt, structured output schema, and parser are frozen for the official experimental runs.
 
-The LLM is instructed to:
+Each executed scenario receives one official Gemini run only. Outputs are retained as produced and are not rerun or replaced based on result quality.
 
-- Act as a Level 1 SOC analyst.
-- Analyse only the supplied evidence.
-- Avoid inventing or assuming missing facts.
-- Prefer investigation when the available evidence is insufficient.
-- Produce concise evidence-based reasoning.
-- Identify the supplied evidence fields that materially influenced the decision.
-
-The model returns the following fields:
-
-- `decision`
-- `severity`
-- `escalation`
-- `confidence`
-- `reasoning`
-- `evidence_used`
-
-## Decision Values
-
-The permitted triage decisions are:
-
-- `Benign`
-- `Investigate`
-- `Escalate`
-
-The corresponding escalation values are:
-
-- `Benign` -> `No escalation`
-- `Investigate` -> `Investigate further`
-- `Escalate` -> `Escalate to L2`
-
-Severity is restricted to:
-
-- `Low`
-- `Medium`
-- `High`
-- `Critical`
-
-## Configuration Freeze
-
-`LLM-GEMINI-v1.0` was frozen before official LLM-assisted scenario evaluation.
-
-The model, system instruction, thinking level and structured output schema must not be modified in response to individual scenario results.
-
-This prevents scenario-specific tuning and supports a fair comparison with the manual and deterministic rule-based triage methods.
-
-## Files
-
-- `prompt-template.md` — frozen Level 1 SOC analyst prompt.
-- `output-schema.json` — structured output schema used for Gemini responses.
-
-## Reproducibility
-
-Scenario evidence is stored separately as frozen JSON inputs.
-
-The same scenario evidence should be used across:
-
-1. Manual triage
-2. Rule-based n8n triage
-3. LLM-assisted n8n triage
-
-This supports consistent and reproducible comparison between the three methods.
+SC-06 remains Not Executed / N/A due to laboratory limitations.
