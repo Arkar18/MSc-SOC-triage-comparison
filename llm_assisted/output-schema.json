@@ -1,0 +1,53 @@
+{
+  "type": "object",
+  "properties": {
+    "decision": {
+      "type": "string",
+      "enum": [
+        "Benign",
+        "Investigate",
+        "Escalate"
+      ]
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "Low",
+        "Medium",
+        "High",
+        "Critical"
+      ]
+    },
+    "escalation": {
+      "type": "string",
+      "enum": [
+        "No escalation",
+        "Investigate further",
+        "Escalate to L2"
+      ]
+    },
+    "confidence": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "reasoning": {
+      "type": "string"
+    },
+    "evidence_used": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "decision",
+    "severity",
+    "escalation",
+    "confidence",
+    "reasoning",
+    "evidence_used"
+  ],
+  "additionalProperties": false
+}
