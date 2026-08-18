@@ -1,21 +1,286 @@
-## Pre-Experiment Schema Finalisation
+# LLM-Assisted SOC Triage
 
-Before any official Gemini scenario testing was performed, the LLM-assisted configuration was reviewed against the final dissertation proposal.
+This directory contains the configuration and supporting files used for the LLM-assisted alert-triage method in the MSc dissertation:
 
-The structured output schema was updated to include:
+**A Comparative Evaluation of Manual, Rule-Based, and LLM-Assisted SOC Alert Triage Using Wazuh and n8n**
 
-- Alert summary
-- MITRE ATT&CK technique ID
-- MITRE ATT&CK technique name
-- MITRE ATT&CK tactic
-- MITRE mapping basis
+The LLM-assisted method uses n8n to submit frozen Wazuh alert evidence to Google Gemini and return a structured Level 1 SOC triage result.
 
-The prompt was also updated to require MITRE ATT&CK mappings to be supported by the supplied Wazuh evidence and to avoid forcing a mapping when the evidence is insufficient.
+## Workflow
 
-This revision was completed before the first official Gemini run to maintain methodological transparency and prevent post-result prompt or schema tuning.
+The n8n workflow follows this structure:
 
-Following this revision, the Gemini model, prompt, structured output schema, and parser are frozen for the official experimental runs.
+```text
+Manual Trigger
+      ↓
+Sample Wazuh Alert
+      ↓
+Gemini 3.5 Flash
+      ↓
+Parse Gemini Triage
+```
 
-Each executed scenario receives one official Gemini run only. Outputs are retained as produced and are not rerun or replaced based on result quality.
+### Manual Trigger
 
-SC-06 remains Not Executed / N/A due to laboratory limitations.
+Starts the experimental workflow manually.
+
+Each scenario is executed individually so that the exact frozen evidence associated with that case can be supplied to the workflow.
+
+### Sample Wazuh Alert
+
+Contains the frozen Wazuh evidence for the scenario being evaluated.
+
+Only factual fields obtained from the collected Wazuh evidence and neutral case metadata are supplied.
+
+Analyst-written conclusions, expected outcomes, scenario ground truth and interpretive summaries are not supplied to Gemini.
+
+This is intended to prevent information leakage and ensure that Gemini performs its triage using the same underlying evidence available to the other evaluated methods.
+
+### Gemini 3.5 Flash
+
+The Gemini node submits the supplied evidence to the Google Gemini API using the frozen LLM-assisted configuration.
+
+Configuration used for the official experiment:
+
+* Model: `gemini-3.5-flash`
+* Thinking level: `medium`
+* Response format: Structured JSON
+* Role: Level 1 SOC analyst
+* Input source: Frozen Wazuh evidence
+* Official executions: One Gemini run per executed scenario
+
+Gemini is instructed to analyse only the supplied evidence and avoid unsupported assumptions.
+
+If the evidence is insufficient for a confident classification, the prompt instructs the model to prefer further investigation rather than invent missing information.
+
+## Triage Decision Structure
+
+The LLM uses three primary triage decisions:
+
+```text
+Benign
+Investigate
+Escalate
+```
+
+These decisions have a fixed escalation relationship:
+
+```text
+Benign      → No escalation
+Investigate → Investigate further
+Escalate    → Escalate to L2
+```
+
+Severity is independently assigned as:
+
+```text
+Low
+Medium
+High
+Critical
+```
+
+Confidence is returned as an integer from:
+
+```text
+0–100
+```
+
+Confidence represents how strongly the supplied evidence supports the model's triage decision. It is not treated as a calibrated probability of correctness.
+
+## Structured Output
+
+Gemini returns the following fields:
+
+### `summary`
+
+A concise summary of the security activity represented by the supplied evidence.
+
+### `decision`
+
+The primary SOC triage disposition:
+
+* `Benign`
+* `Investigate`
+* `Escalate`
+
+### `severity`
+
+The assessed security significance:
+
+* `Low`
+* `Medium`
+* `High`
+* `Critical`
+
+### `escalation`
+
+The corresponding operational action:
+
+* `No escalation`
+* `Investigate further`
+* `Escalate to L2`
+
+### `confidence`
+
+An integer between `0` and `100` representing the strength of evidence supporting the triage decision.
+
+### `mitre_id`
+
+The MITRE ATT&CK technique identifier supported by the evidence.
+
+Example:
+
+```text
+T1110
+```
+
+If no reasonable mapping can be supported, Gemini returns:
+
+```text
+None
+```
+
+### `mitre_technique`
+
+The corresponding MITRE ATT&CK technique name.
+
+### `mitre_tactic`
+
+The corresponding MITRE ATT&CK tactic.
+
+### `mitre_basis`
+
+A short explanation of why the supplied evidence supports the MITRE ATT&CK mapping.
+
+Wazuh-provided MITRE metadata is treated as alert metadata rather than automatic proof that the mapping is correct.
+
+### `reasoning`
+
+A concise evidence-based explanation of the triage decision.
+
+### `evidence_used`
+
+A list containing only the exact input field names that materially influenced Gemini's decision.
+
+## Parse Gemini Triage
+
+The `Parse Gemini Triage` node parses the structured JSON generated by Gemini.
+
+The parser exposes the following fields:
+
+```text
+case_id
+method
+summary
+decision
+severity
+escalation
+confidence
+mitre_id
+mitre_technique
+mitre_tactic
+mitre_basis
+reasoning
+evidence_used
+```
+
+The parser does not reclassify, reinterpret or improve Gemini's output.
+
+Its purpose is only to convert the structured Gemini response into fields that can be recorded consistently for analysis.
+
+## Repository Files
+
+### `prompt-template.md`
+
+Contains the frozen system prompt used for the official LLM-assisted experiment.
+
+The prompt defines:
+
+* Level 1 SOC analyst role
+* Evidence-only analysis
+* Decision and escalation relationship
+* Severity assessment
+* Confidence scoring
+* Evidence-use requirements
+* MITRE ATT&CK mapping requirements
+* Restrictions against unsupported claims
+
+### `output-schema.json`
+
+Contains the structured JSON schema required from Gemini.
+
+The schema controls the expected field names, allowed classifications, confidence range and required properties.
+
+Additional undeclared properties are disabled.
+
+### Scenario Evidence
+
+The experiment uses previously collected and frozen Wazuh evidence JSON files.
+
+Each scenario uses the corresponding frozen evidence without adding analyst interpretations or expected outcomes before the Gemini execution.
+
+## Experimental Procedure
+
+For each executed scenario:
+
+1. Open the corresponding frozen scenario evidence JSON.
+2. Copy the evidence into the `Sample Wazuh Alert` node without changing its meaning.
+3. Confirm that the correct `case_id` is present.
+4. Execute the LLM-assisted workflow once.
+5. Preserve the original Gemini output.
+6. Record the structured result and execution time.
+7. Save supporting screenshots where required.
+8. Continue to the next scenario.
+
+The Gemini response is retained regardless of whether its decision is later assessed as correct or incorrect.
+
+A scenario is not rerun simply because another response might be better.
+
+## Experimental Controls
+
+To maintain a fair comparison between the three evaluated methods:
+
+* Manual triage uses one recorded result per scenario.
+* Rule-Based n8n triage uses one official deterministic result per scenario.
+* Gemini uses one official result per executed scenario.
+* All methods use the same frozen Wazuh evidence wherever applicable.
+* Gemini is not supplied with the expected scenario outcome.
+* The official Gemini output is not replaced based on result quality.
+* Prompt or schema changes are not made in response to official scenario outcomes.
+* SC-06 remains `Not Executed / N/A` due to the laboratory limitation.
+
+## Reproducibility
+
+The LLM-assisted configuration is stored in this repository to provide a reproducible record of the experimental setup.
+
+The repository preserves:
+
+* Prompt configuration
+* Structured-output schema
+* Scenario evidence
+* Workflow behaviour
+* Experimental controls
+* Official experimental results where stored
+
+Git commit history provides version tracking for changes made to the implementation.
+
+## Evaluation
+
+The LLM-assisted results will later be evaluated against independently established reference outcomes.
+
+Evaluation may include:
+
+* Triage decision correctness
+* Severity correctness
+* Escalation correctness
+* Processing time
+* MITRE ATT&CK mapping accuracy
+* Evidence quality
+* Reasoning clarity
+* Escalation usefulness
+* Unsupported claims
+* Evidence misuse
+* Overconfidence
+
+The LLM-assisted method is one of three experimental approaches and is not treated as the ground truth.
